@@ -2,42 +2,49 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import serviceCctv from '../assets/service-cctv.png';
+import serviceLaptop from '../assets/service-laptop.png';
+import serviceAttendance from '../assets/service-attendance.png';
+import intercomSetup from '../assets/intercom-setup.png';
+import serverNetworking from '../assets/server-networking.png';
+import itSupport from '../assets/it-support.png';
+
 const Services = () => {
   const servicesList = [
     {
       id: 'cctv-installation',
       title: "CCTV Camera Sales & Installation",
-      image: '/src/assets/service-cctv.png',
+      image: serviceCctv,
       items: ["Dome Camera", "Bullet Camera", "IP Camera", "Wireless CCTV"]
     },
     {
       id: 'laptop-repair',
       title: "Computer & Laptop Service",
-      image: '/src/assets/service-laptop.png',
+      image: serviceLaptop,
       items: ["Desktop Repair", "Laptop Repair", "Windows Installation", "Data Backup"]
     },
     {
       id: 'attendance-machine',
       title: "Attendance Machine Service",
-      image: '/src/assets/service-attendance.png',
+      image: serviceAttendance,
       items: ["ESSL Device Setup", "Fingerprint Registration", "Software Support"]
     },
     {
       id: 'intercom-system',
       title: "Intercom Services",
-      image: '/src/assets/intercom-setup.png',
+      image: intercomSetup,
       items: ["Building Intercom", "Office Intercom", "Video Door Phone"]
     },
     {
       id: 'networking-services',
       title: "Networking Services",
-      image: '/src/assets/server-networking.png',
+      image: serverNetworking,
       items: ["Router Setup", "LAN Cabling", "WiFi Installation", "Office Networking"]
     },
     {
       id: 'amc-maintenance',
       title: "AMC Services",
-      image: '/src/assets/it-support.png',
+      image: itSupport,
       items: ["CCTV AMC", "Computer AMC", "Monthly Maintenance", "Tech Support"]
     }
   ];

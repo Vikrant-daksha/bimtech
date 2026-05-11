@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Clock, Timer, Phone, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Clock, Timer, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 import { WhatsAppIcon } from './SocialIcons';
+
+import serviceCctv from '../assets/service-cctv.png';
+import serviceLaptop from '../assets/service-laptop.png';
+import serviceAttendance from '../assets/service-attendance.png';
+import intercomSetup from '../assets/intercom-setup.png';
+import serverNetworking from '../assets/server-networking.png';
+import itSupport from '../assets/it-support.png';
 
 const serviceData = {
   'cctv-installation': {
@@ -25,7 +32,7 @@ const serviceData = {
         details: "Comprehensive maintenance covering regular health checks, cleaning, troubleshooting, and priority support to keep your system flawless."
       }
     ],
-    image: '/src/assets/service-cctv.png',
+    image: serviceCctv,
     timeRequired: '1 - 2 Days'
   },
   'laptop-repair': {
@@ -49,7 +56,7 @@ const serviceData = {
         details: "Expert retrieval of lost, deleted, or corrupted files from failing hard drives, SSDs, and external storage devices."
       }
     ],
-    image: '/src/assets/service-laptop.png',
+    image: serviceLaptop,
     timeRequired: '2 - 24 Hours'
   },
   'attendance-machine': {
@@ -85,7 +92,7 @@ const serviceData = {
         details: "Providing Annual Maintenance Contracts (AMC) to ensure consistent performance with zero downtime."
       }
     ],
-    image: '/src/assets/service-attendance.png',
+    image: serviceAttendance,
     timeRequired: '2 - 4 Hours'
   },
   'intercom-system': {
@@ -109,7 +116,7 @@ const serviceData = {
         details: "User-friendly indoor monitors and handsets enabling convenient unlocking of electronic doors or gates with a single button press."
       }
     ],
-    image: '/src/assets/intercom-setup.png',
+    image: intercomSetup,
     timeRequired: '1 - 3 Days'
   },
   'networking-services': {
@@ -133,7 +140,7 @@ const serviceData = {
         details: "Rapid identification and resolution of network bottlenecks, IP conflicts, and connectivity drops to minimize operational downtime."
       }
     ],
-    image: '/src/assets/server-networking.png',
+    image: serverNetworking,
     timeRequired: '1 - 3 Days'
   },
   'amc-maintenance': {
@@ -157,7 +164,7 @@ const serviceData = {
         details: "Access to our dedicated support hotline and rapid on-site response for critical network, security, or hardware emergencies."
       }
     ],
-    image: '/src/assets/it-support.png',
+    image: itSupport,
     timeRequired: 'Annual Contract'
   }
 };
@@ -259,12 +266,12 @@ const ServiceDetail = () => {
 
               <div className="contact-actions" style={{ borderTop: '2px solid #f0f0f0', paddingTop: '25px' }}>
                 <h4 style={{ fontSize: '16px', marginBottom: '20px', color: '#333', textAlign: 'center' }}>Ready to get started?</h4>
-                <a href="tel:+918178716301" className="btn-call" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: '15px', padding: '14px', fontSize: '16px', borderRadius: '8px', gap: '8px', backgroundColor: '#007bff', color: 'white', textDecoration: 'none', fontWeight: 'bold', boxSizing: 'border-box' }}>
+                <a href="tel:+918169670476" className="btn-call" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: '15px', padding: '14px', fontSize: '16px', borderRadius: '8px', gap: '8px', backgroundColor: '#003399', color: 'white', textDecoration: 'none', fontWeight: 'bold', boxSizing: 'border-box' }}>
                   <Phone size={20} />
-                  +91 81787 16301
+                  +91 81696 70476
                 </a>
 
-                <a href="https://wa.me/918178716301" className="btn-whatsapp" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: '15px', padding: '14px', fontSize: '16px', borderRadius: '8px', gap: '8px', backgroundColor: '#28a745', color: 'white', textDecoration: 'none', fontWeight: 'bold', boxSizing: 'border-box' }}>
+                <a href="https://wa.me/918169670476" className="btn-whatsapp" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: '15px', padding: '14px', fontSize: '16px', borderRadius: '8px', gap: '8px', backgroundColor: '#25d366', color: 'white', textDecoration: 'none', fontWeight: 'bold', boxSizing: 'border-box' }}>
                   <WhatsAppIcon size={20} />
                   WhatsApp Us
                 </a>
