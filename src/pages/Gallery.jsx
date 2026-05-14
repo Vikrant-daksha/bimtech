@@ -1,22 +1,20 @@
-import React from 'react';
-
-import cctvInstallation from '../assets/cctv-installation.png';
-import itSupport from '../assets/it-support.png';
-import biometricSystem from '../assets/biometric-machines.webp';
-import serverNetworking from '../assets/server-networking.png';
-import intercomSetup from '../assets/intercom-setup.png';
-import corporateWorkstation from '../assets/corporate-workstation.png';
-
-const galleryItems = [
-  { id: 1, image: cctvInstallation, title: 'CCTV Installation' },
-  { id: 2, image: itSupport, title: 'IT Support Setup' },
-  { id: 3, image: biometricSystem, title: 'Biometric System' },
-  { id: 4, image: serverNetworking, title: 'Server Networking' },
-  { id: 5, image: intercomSetup, title: 'Intercom Setup' },
-  { id: 6, image: corporateWorkstation, title: 'Corporate Workstation' } 
-];
+import React, { useState, useEffect } from 'react';
+import { client, urlFor } from '../sanity/client';
 
 const Gallery = () => {
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch('*[_type == "gallery"]')
+      .then(data => {
+        setGalleryItems(data);
+        setLoading(false);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  if (loading) return null;
   return (
     <div className="page-content" style={{ padding: '80px 0', minHeight: '60vh', background: '#f8f9fa' }}>
       <div className="container">
@@ -34,7 +32,7 @@ const Gallery = () => {
         }}>
           {galleryItems.map((item) => (
             <div 
-              key={item.id} 
+              key={item._id} 
               style={{ 
                 position: 'relative',
                 borderRadius: '16px', 
@@ -55,7 +53,7 @@ const Gallery = () => {
               }}
             >
               <img 
-                src={item.image} 
+                src={item.image ? urlFor(item.image).url() : ''} 
                 alt={item.title} 
                 style={{ 
                   width: '100%', 

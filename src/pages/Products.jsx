@@ -1,55 +1,92 @@
-import React from 'react';
-import './Products.css'; // We'll add some CSS to index.css or a new file, let's use inline/index.css classes
-
-// Import images (if using vite, this works well, or just use absolute paths if they are in public)
-// Since they are in src/assets, we should import them or use new URL
-import cctvImg from '../assets/cctv-cameras.avif';
-import dvrImg from '../assets/dvr-nvr.png';
-import hardDiskImg from '../assets/hard-disk.png';
-import biometricImg from '../assets/biometric-machines.webp';
-import computerImg from '../assets/computers-laptops.jpg';
-import routerImg from '../assets/router-networking-accessories.webp';
-import intercomImg from '../assets/intercom-systems.webp';
-import powerImg from '../assets/power-supply-smps.webp';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { client, urlFor } from '../sanity/client';
+import './Products.css';
 
 const Products = () => {
-  const products = [
-    { name: "CCTV Cameras", image: cctvImg },
-    { name: "DVR & NVR", image: dvrImg },
-    { name: "Hard Disk", image: hardDiskImg },
-    { name: "Biometric Machines", image: biometricImg },
-    { name: "Computers & Laptops", image: computerImg },
-    { name: "Router & Networking Accessories", image: routerImg },
-    { name: "Intercom Systems", image: intercomImg },
-    { name: "Power Supply & SMPS", image: powerImg }
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch(`*[_type == "product"]{
+      title,
+      "slug": slug.current,
+      description,
+      "image": models[0].image
+    }`)
+      .then(data => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading products...</div>;
 
   return (
-    <div className="page-content" style={{ padding: '80px 0', minHeight: '60vh', background: '#f8f9fa' }}>
+    <div className="page-content" style={{ padding: '80px 0', minHeight: '60vh', background: '#fcfdff' }}>
       <div className="container">
-        <h1 style={{ textAlign: 'center', marginBottom: '15px', color: '#051937', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '800' }}>Available Products</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '15px', color: '#051937', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '800' }}>Product Catalog</h1>
         <p style={{ textAlign: 'center', marginBottom: '50px', color: '#666', fontSize: '18px', maxWidth: '600px', margin: '0 auto 50px auto' }}>
-          Explore our range of premium IT, security, and networking hardware.
+          Genuine hardware and security solutions for your business. Select a category to see available models.
         </p>
 
         <div className="products-grid">
           {products.map((product, idx) => (
-            <div key={idx} className="product-card" style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', aspectRatio: '1/1', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', cursor: 'pointer', background: '#fff' }}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="product-image"
-                style={{ width: '100%', height: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }}
-              />
-              <div
-                className="product-overlay"
-                style={{ position: 'absolute', bottom: '0', left: '0', right: '0', background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)', padding: '30px 20px', display: 'flex', alignItems: 'flex-end', height: '50%' }}
-              >
-                <h3 style={{ margin: '0', color: 'white', fontSize: '22px', fontWeight: '600', letterSpacing: '0.5px' }}>
-                  {product.name}
-                </h3>
+            <Link 
+              key={idx} 
+              to={`/product/${product.slug}`}
+              className="product-card" 
+              style={{ 
+                textDecoration: 'none',
+                position: 'relative', 
+                borderRadius: '24px', 
+                overflow: 'hidden', 
+                aspectRatio: '1/1', 
+                boxShadow: '0 10px 40px rgba(0,0,0,0.04)', 
+                cursor: 'pointer', 
+                background: '#fff',
+                display: 'block',
+                border: '1px solid #f0f0f0',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.04)'; }}
+            >
+              <div style={{ width: '100%', height: '100%', padding: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {product.image ? (
+                  <img
+                    src={urlFor(product.image).url()}
+                    alt={product.title}
+                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                  />
+                ) : (
+                  <div style={{ color: '#eee', fontSize: '40px' }}>📦</div>
+                )}
               </div>
-            </div>
+              <div
+                style={{ 
+                  position: 'absolute', 
+                  bottom: '0', 
+                  left: '0', 
+                  right: '0', 
+                  background: 'linear-gradient(to top, rgba(5,25,55,0.9) 0%, rgba(5,25,55,0.4) 70%, transparent 100%)', 
+                  padding: '30px 20px', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  height: '60%' 
+                }}
+              >
+                <h3 style={{ margin: '0', color: 'white', fontSize: '22px', fontWeight: '700', letterSpacing: '0.5px' }}>
+                  {product.title}
+                </h3>
+                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', marginTop: '5px' }}>View Models & Specs</p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,52 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Camera, Laptop, Fingerprint, Phone, Network, ArrowRight } from 'lucide-react';
-
-import serviceCctv from '../assets/service-cctv.png';
-import serviceLaptop from '../assets/service-laptop.png';
-import serviceAttendance from '../assets/service-attendance.png';
-import intercomSetup from '../assets/intercom-setup.png';
-import serverNetworking from '../assets/server-networking.png';
-
-const services = [
-  {
-    id: 'cctv-installation',
-    title: 'CCTV Installation & Maintenance',
-    desc: 'Complete CCTV camera setup for homes, offices, and shops with HD quality cameras and remote mobile viewing.',
-    icon: <Camera className="w-6 h-6" />,
-    image: serviceCctv
-  },
-  {
-    id: 'laptop-repair',
-    title: 'Laptop & Desktop Repair',
-    desc: 'All types of computer repair services including hardware, software, formatting, and upgrades.',
-    icon: <Laptop className="w-6 h-6" />,
-    image: serviceLaptop
-  },
-  {
-    id: 'attendance-machine',
-    title: 'Attendance Machine (ESSL)',
-    desc: 'Biometric attendance system installation and support for offices and companies.',
-    icon: <Fingerprint className="w-6 h-6" />,
-    image: serviceAttendance
-  },
-  {
-    id: 'intercom-system',
-    title: 'Intercom System',
-    desc: 'Internal communication systems for offices, buildings, and apartments.',
-    icon: <Phone className="w-6 h-6" />,
-    image: intercomSetup
-  },
-  {
-    id: 'networking-services',
-    title: 'Networking Services',
-    desc: 'LAN setup, WiFi installation, and network troubleshooting for smooth connectivity.',
-    icon: <Network className="w-6 h-6" />,
-    image: serverNetworking
-  }
-];
+import { client, urlFor } from '../sanity/client';
+import * as Icons from 'lucide-react';
 
 const Services = () => {
+  const [services, setServices] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    client.fetch('*[_type == "service"] | order(title asc)')
+      .then(data => {
+        setServices(data);
+        setLoading(false);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const getIcon = (iconName) => {
+    const Icon = Icons[iconName] || Icons.HelpCircle;
+    return <Icon className="w-6 h-6" />;
+  };
+
+  if (loading) return null; // Or a skeleton
   return (
     <section className="services-section">
       <div className="services-container">
@@ -57,26 +32,26 @@ const Services = () => {
             <div className="title-underline"></div>
           </div>
           <Link to="/services" className="view-all-btn">
-            View All Services <ArrowRight className="w-4 h-4 ml-2" />
+            View All Services <Icons.ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
 
         <div className="services-grid">
           {services.map((service) => (
-            <div key={service.id} className="service-card">
+            <div key={service._id} className="service-card">
               <div className="card-image">
-                <img src={service.image} alt={service.title} />
+                <img src={service.image ? urlFor(service.image).url() : ''} alt={service.title} />
                 <div className="card-icon-overlay">
                   <div className="icon-circle">
-                    {service.icon}
+                    {getIcon(service.icon)}
                   </div>
                 </div>
               </div>
               <div className="card-content">
                 <h3>{service.title}</h3>
-                <p>{service.desc}</p>
-                <Link to={`/service/${service.id}`} className="learn-more-link">
-                  Learn More <ArrowRight style={{ marginLeft: '2px' }} />
+                <p>{service.description}</p>
+                <Link to={`/service/${service.slug.current}`} className="learn-more-link">
+                  Learn More <Icons.ArrowRight style={{ marginLeft: '2px' }} />
                 </Link>
               </div>
             </div>

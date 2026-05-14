@@ -1,23 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { client } from '../sanity/client';
 
 const AMCPlans = () => {
-  const plans = [
-    {
-      title: "Basic AMC",
-      features: ["Monthly Checkup", "Camera Cleaning", "Basic Support"],
-      color: "#051937"
-    },
-    {
-      title: "Standard AMC",
-      features: ["Complete Maintenance", "DVR Checkup", "Wiring Inspection", "Remote Support"],
-      color: "#0056b3"
-    },
-    {
-      title: "Premium AMC",
-      features: ["Priority Support", "Full System Maintenance", "Emergency Visit", "Backup Assistance"],
-      color: "#cc0000"
-    }
-  ];
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch('*[_type == "amcPlan"] | order(price asc)')
+      .then(data => {
+        setPlans(data);
+        setLoading(false);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  if (loading) return null;
 
   return (
     <div className="page-content" style={{ padding: '120px 0', minHeight: '60vh' }}>

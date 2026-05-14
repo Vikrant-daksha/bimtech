@@ -1,32 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Quote, ArrowRight, User2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const testimonials = [
-  {
-    id: 1,
-    name: "Happy Customer",
-    role: "Local Business Owner",
-    text: "Very fast and reliable service. Highly recommended!",
-    rating: 5
-  },
-  {
-    id: 2,
-    name: "Home Owner",
-    role: "Residence",
-    text: "Best CCTV installation service in area.",
-    rating: 5
-  },
-  {
-    id: 3,
-    name: "Client",
-    role: "Office Manager",
-    text: "Affordable pricing and good support.",
-    rating: 5
-  }
-];
+import { client, urlFor } from '../sanity/client';
 
 const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch('*[_type == "testimonial"]')
+      .then(data => {
+        setTestimonials(data);
+        setLoading(false);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  if (loading) return null;
   return (
     <section className="testimonials-section">
       <div className="container">
@@ -42,19 +32,23 @@ const Testimonials = () => {
 
         <div className="testimonials-grid">
           {testimonials.map((item) => (
-            <div key={item.id} className="testimonial-card-v2">
+            <div key={item._id} className="testimonial-card-v2">
               <div className="quote-icon-blue">
                 <Quote size={24} fill="#007bff" color="#007bff" />
               </div>
-              <p className="testimonial-text">"{item.text}"</p>
+              <p className="testimonial-text">"{item.content}"</p>
               <div className="stars">
                 {[...Array(item.rating)].map((_, i) => (
                   <Star key={i} size={16} fill="#ffc107" color="#ffc107" />
                 ))}
               </div>
               <div className="testimonial-user-flex">
-                <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#f0f5ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '15px' }}>
-                  <User2 size={24} color="#007bff" />
+                <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#f0f5ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '15px', overflow: 'hidden' }}>
+                  {item.image ? (
+                    <img src={urlFor(item.image).url()} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <User2 size={24} color="#007bff" />
+                  )}
                 </div>
                 <div className="user-info">
                   <strong>{item.name}</strong>

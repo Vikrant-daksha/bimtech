@@ -2,21 +2,22 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import cctvInstallation from '../assets/cctv-installation.png';
-import itSupport from '../assets/it-support.png';
-import biometricSystem from '../assets/biometric-machines.webp';
-import serverNetworking from '../assets/server-networking.png';
-import intercomSetup from '../assets/intercom-setup.png';
-
-const projects = [
-  { id: 1, image: cctvInstallation, title: 'CCTV Installation' },
-  { id: 2, image: itSupport, title: 'IT Support Setup' },
-  { id: 3, image: biometricSystem, title: 'Biometric System' },
-  { id: 4, image: serverNetworking, title: 'Server Networking' },
-  { id: 5, image: intercomSetup, title: 'Intercom Setup' },
-];
+import { client, urlFor } from '../sanity/client';
 
 const Projects = () => {
+  const [projects, setProjects] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    client.fetch('*[_type == "gallery"][0...5]')
+      .then(data => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  if (loading) return null;
   return (
     <section className="projects-section">
       <div className="container">
@@ -32,8 +33,8 @@ const Projects = () => {
         
         <div className="projects-grid-5">
           {projects.map((project) => (
-            <div key={project.id} className="project-item">
-              <img src={project.image} alt={project.title} />
+            <div key={project._id} className="project-item">
+              <img src={project.image ? urlFor(project.image).url() : ''} alt={project.title} />
             </div>
           ))}
         </div>

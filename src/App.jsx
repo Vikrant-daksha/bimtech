@@ -14,6 +14,7 @@ import ContactCTA from './components/ContactCTA';
 import ServiceDetail from './components/ServiceDetail';
 import FAQ from './components/FAQ';
 import SpecialOffers from './components/SpecialOffers';
+import ProductDetail from './components/ProductDetail';
 
 // New Pages
 import About from './pages/About';
@@ -59,6 +60,7 @@ function App() {
           <Route path="/support" element={<Support />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/service/:id" element={<ServiceDetail />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </main>
       <Footer />

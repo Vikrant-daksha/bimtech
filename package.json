@@ -10,10 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^2.1.1",
+    "axios": "^1.16.1",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.4.2",
     "lucide-react": "^1.14.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.2"
+    "react-router-dom": "^7.14.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

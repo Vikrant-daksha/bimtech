@@ -1,11 +1,39 @@
-import React from 'react';
-import { Phone, Mail, MapPin, Clock, Send, Globe, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, Mail, MapPin, Send, Globe, ShieldCheck } from 'lucide-react';
 import { WhatsAppIcon } from '../components/SocialIcons';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: 'CCTV Installation',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const getFormSummary = () => {
+    return `Hello BIMTECH IT Solutions,\n\nI would like to inquire about your services.\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Service:* ${formData.service}\n*Message:* ${formData.message}`;
+  };
+
+  const handleWhatsApp = () => {
+    const message = encodeURIComponent(getFormSummary());
+    window.open(`https://wa.me/918169670476?text=${message}`, '_blank');
+  };
+
+  const handleEmail = () => {
+    const subject = encodeURIComponent(`Service Inquiry from ${formData.name}`);
+    const body = encodeURIComponent(getFormSummary());
+    window.location.href = `mailto:info.bimtechitsolutions@gmail.com?subject=${subject}&body=${body}`;
+  };
+
   return (
     <div className="contact-page" style={{ background: '#ffffff', color: '#0f172a', minHeight: '100vh', overflow: 'hidden' }}>
-
+      
       {/* --- HERO HEADER --- */}
       <section style={{
         padding: '50px 0 20px',
@@ -154,19 +182,19 @@ const Contact = () => {
               <form style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                 <div style={{ gridColumn: 'span 1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Full Name</label>
-                  <input type="text" placeholder="John Doe" style={inputStyle} />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: 'span 1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Phone Number</label>
-                  <input type="tel" placeholder="+91 00000 00000" style={inputStyle} />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 00000 00000" style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Email Address</label>
-                  <input type="email" placeholder="john@company.com" style={inputStyle} />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="john@company.com" style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Service Interested In</label>
-                  <select style={inputStyle}>
+                  <select name="service" value={formData.service} onChange={handleChange} style={inputStyle}>
                     <option>CCTV Installation</option>
                     <option>IT & Networking</option>
                     <option>Laptop/Desktop Repair</option>
@@ -177,27 +205,47 @@ const Contact = () => {
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Your Message</label>
-                  <textarea placeholder="How can we help you?" rows="4" style={inputStyle}></textarea>
+                  <textarea name="message" value={formData.message} onChange={handleChange} placeholder="How can we help you?" rows="4" style={inputStyle}></textarea>
                 </div>
-                <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-                  <button type="button" style={{
-                    padding: '18px 30px',
+                
+                {/* ACTIONS */}
+                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
+                  <button type="button" onClick={handleWhatsApp} style={{
+                    padding: '16px 20px',
+                    background: '#25d366',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontWeight: '700',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    boxShadow: '0 8px 15px rgba(37, 211, 102, 0.2)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <WhatsAppIcon size={20} /> Via WhatsApp
+                  </button>
+
+                  <button type="button" onClick={handleEmail} style={{
+                    padding: '16px 20px',
                     background: 'linear-gradient(135deg, #003399 0%, #001f5c 100%)',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '12px',
                     fontWeight: '700',
-                    fontSize: '18px',
+                    fontSize: '16px',
                     cursor: 'pointer',
-                    width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '10px',
-                    boxShadow: '0 10px 20px rgba(0, 51, 153, 0.2)',
+                    boxShadow: '0 8px 15px rgba(0, 51, 153, 0.2)',
                     transition: 'all 0.3s ease'
                   }}>
-                    <Send size={20} /> Send Message
+                    <Send size={20} /> Via Email
                   </button>
                 </div>
               </form>

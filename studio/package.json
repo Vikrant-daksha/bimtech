@@ -1,0 +1,27 @@
+{
+  "name": "bimtech-studio",
+  "private": true,
+  "version": "1.0.0",
+  "main": "package.json",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start",
+    "lint": "eslint .",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "sanity": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.0.0",
+    "lucide-react": "^0.263.1",
+    "@sanity/vision": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-sanity": "^6.0.0"
+  }
+}
