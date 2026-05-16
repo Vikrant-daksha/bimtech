@@ -10,22 +10,32 @@ const client = createClient({
 });
 
 async function fix() {
-  const products = await client.fetch(`*[_type == "product"] | order(title asc)`);
-  console.log('--- ALL PRODUCTS (INCL DRAFTS) ---');
+  const schemaTypes = ["product", "service", "amcPlan", "testimonial", "deal", "gallery"];
+  
+  // 1. Rename systems
+  console.log('Renaming systems...');
+  const products = await client.fetch(`*[_type == "product"]`);
   for (const p of products) {
-    console.log(`[${p._id}] Title: "${p.title}" | Models: ${p.models?.length || 0}`);
+    if (p.title === 'Face Systems' || p.title === 'Face Attendance Systems') {
+        console.log(`Updating ${p._id} -> "Face Attendance & Access Control"`);
+        await client.patch(p._id).set({ title: "Face Attendance & Access Control" }).commit();
+    }
+    if (p.title === 'Fingerprint Systems' || p.title === 'Fingerprint Attendance Systems') {
+        console.log(`Updating ${p._id} -> "Fingerprint Attendance & Access Control"`);
+        await client.patch(p._id).set({ title: "Fingerprint Attendance & Access Control" }).commit();
+    }
   }
-  console.log('-----------------------------------');
 
-  // 2. GLOBAL JUNK CLEANUP (Relevant types only)
-  console.log('Searching for untitled/empty documents in defined types...');
-  const types = ["product", "service", "amcPlan", "testimonial", "deal", "gallery"];
-  const junk = await client.fetch(`*[_type in $types && (title == "Untitled" || title == "untitled" || !defined(title) || title == "")]`, { types });
+  // 2. Delete Untitled or Empty in schema types ONLY
+  console.log('Cleaning junk from schema types...');
+  const junk = await client.fetch(`*[_type in $schemaTypes && (title == "Untitled" || title == "untitled" || !defined(title) || title == "")]`, { schemaTypes });
   
   for (const doc of junk) {
     console.log(`Deleting junk [${doc._id}] Type: ${doc._type} Title: "${doc.title}"`);
     await client.delete(doc._id);
   }
+
+  console.log('✅ Surgical fix complete!');
 }
 
 fix().catch(err => console.error(err));
