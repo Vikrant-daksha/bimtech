@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, ShieldCheck, Zap, Info, Trash2, ChevronDown } from 'lucide-react';
 import { WhatsAppIcon } from './SocialIcons';
 import { client, urlFor } from '../sanity/client';
+
+// Add global styles for animations
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
+document.head.appendChild(styleSheet);
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +37,18 @@ const ProductDetail = () => {
         setLoading(false);
       });
   }, [id]);
+
+  const { search } = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    const modelParam = params.get('model');
+    if (modelParam !== null && product?.models) {
+      const idx = parseInt(modelParam);
+      if (!isNaN(idx) && idx >= 0 && idx < product.models.length) {
+        setSelectedModelIndex(idx);
+      }
+    }
+  }, [search, product]);
 
   if (loading) return <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: '#666' }}>Gathering product details...</div>;
 
@@ -147,10 +169,12 @@ const ProductDetail = () => {
                       borderBottom: i === selectedModel.specs.length - 1 ? 'none' : '1px solid #f0f0f0',
                       display: 'flex',
                       justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: '24px',
                       fontSize: '16px'
                     }}>
-                      <span style={{ color: '#888' }}>{spec.label}</span>
-                      <span style={{ color: '#333', fontWeight: '600' }}>{spec.value}</span>
+                      <span style={{ color: '#888', flexShrink: 0 }}>{spec.label}</span>
+                      <span style={{ color: '#333', fontWeight: '600', textAlign: 'right' }}>{spec.value}</span>
                     </li>
                   ))}
                 </ul>
@@ -229,8 +253,9 @@ const ProductDetail = () => {
                                   alignItems: 'center',
                                   justifyContent: 'space-between',
                                   padding: '10px 15px',
-                                  borderRadius: '10px',
+                                  borderRadius: currentId !== null ? '10px 0 0 10px' : '10px',
                                   border: '1px solid #eee',
+                                  borderRight: currentId !== null ? 'none' : '1px solid #eee',
                                   background: '#f8f9fa',
                                   cursor: 'pointer',
                                   transition: 'all 0.3s ease'
@@ -294,16 +319,16 @@ const ProductDetail = () => {
                             </div>
 
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setFunc(null);
-
                               }}
                               style={{
                                 background: '#ff4d4d',
-                                border: 'none',
+                                border: '1px solid #ff4d4d',
                                 borderRadius: '0 10px 10px 0',
                                 width: currentId !== null ? '40px' : '0',
-                                height: '36px',
+                                height: '38px', // Match the height of the dropdown
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -311,10 +336,11 @@ const ProductDetail = () => {
                                 color: '#fff',
                                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                 opacity: currentId !== null ? 1 : 0,
-                                transform: currentId !== null ? 'translateX(-7px)' : 'translateX(-40px)',
+                                transform: currentId !== null ? 'translateX(0)' : 'translateX(-40px)',
                                 overflow: 'hidden',
                                 boxShadow: '0 4px 10px rgba(255, 77, 77, 0.2)',
-                                zIndex: 5
+                                zIndex: 5,
+                                marginLeft: currentId !== null ? '0' : '-40px'
                               }}
                               title="Remove"
                             >
@@ -385,7 +411,7 @@ const ProductDetail = () => {
             </div>
 
             <p style={{ textAlign: 'center', marginTop: '30px', color: '#888', fontSize: '14px', fontStyle: 'italic' }}>
-              Highlighted rows indicate technical differences between selected models.
+              Compare technical specifications side-by-side.
             </p>
           </div>
         )}

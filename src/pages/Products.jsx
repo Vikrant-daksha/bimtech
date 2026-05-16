@@ -37,9 +37,10 @@ const Products = () => {
 
     products.forEach(product => {
       const categoryMatches = product.title.toLowerCase().includes(term);
-      const matchingModels = (product.models || []).filter(model => 
-        model.modelName?.toLowerCase().includes(term) || categoryMatches
-      );
+      const matchingModels = (product.models || []).map((model, index) => ({ ...model, originalIndex: index }))
+        .filter(model => 
+          model.modelName?.toLowerCase().includes(term) || categoryMatches
+        );
 
       if (matchingModels.length > 0) {
         results.push({
@@ -84,7 +85,7 @@ const Products = () => {
             className="search-input"
           />
           {searchTerm && (
-            <button 
+            <button
               onClick={() => setSearchTerm('')}
               style={{
                 position: 'absolute',
@@ -107,18 +108,18 @@ const Products = () => {
           /* Original Category Grid */
           <div className="products-grid">
             {products.map((product, idx) => (
-              <Link 
-                key={idx} 
+              <Link
+                key={idx}
                 to={`/product/${product.slug}`}
-                className="product-card" 
-                style={{ 
+                className="product-card"
+                style={{
                   textDecoration: 'none',
-                  position: 'relative', 
-                  borderRadius: '24px', 
-                  overflow: 'hidden', 
-                  aspectRatio: '1/1', 
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.04)', 
-                  cursor: 'pointer', 
+                  position: 'relative',
+                  borderRadius: '24px',
+                  overflow: 'hidden',
+                  aspectRatio: '1/1',
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.04)',
+                  cursor: 'pointer',
                   background: '#fff',
                   display: 'block',
                   border: '1px solid #f0f0f0',
@@ -139,17 +140,17 @@ const Products = () => {
                   )}
                 </div>
                 <div
-                  style={{ 
-                    position: 'absolute', 
-                    bottom: '0', 
-                    left: '0', 
-                    right: '0', 
-                    background: 'linear-gradient(to top, rgba(5,25,55,0.9) 0%, rgba(5,25,55,0.4) 70%, transparent 100%)', 
-                    padding: '30px 20px', 
-                    display: 'flex', 
+                  style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    left: '0',
+                    right: '0',
+                    background: 'linear-gradient(to top, rgba(5,25,55,0.9) 0%, rgba(5,25,55,0.4) 70%, transparent 100%)',
+                    padding: '30px 20px',
+                    display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
-                    height: '60%' 
+                    height: '60%'
                   }}
                 >
                   <h3 style={{ margin: '0', color: 'white', fontSize: '22px', fontWeight: '700', letterSpacing: '0.5px' }}>
@@ -166,7 +167,7 @@ const Products = () => {
             {filteredResults.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
                 <p style={{ fontSize: '20px' }}>No models found matching "<strong>{searchTerm}</strong>"</p>
-                <button 
+                <button
                   onClick={() => setSearchTerm('')}
                   style={{ background: 'none', border: 'none', color: '#4776E6', cursor: 'pointer', textDecoration: 'underline', marginTop: '10px' }}
                 >
@@ -176,43 +177,43 @@ const Products = () => {
             ) : (
               filteredResults.map((group, gIdx) => (
                 <div key={gIdx} className="search-group" style={{ marginBottom: '60px' }}>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '15px', 
-                    marginBottom: '25px', 
-                    borderBottom: '1px solid #eee', 
-                    paddingBottom: '10px' 
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '15px',
+                    marginBottom: '25px',
+                    borderBottom: '1px solid #eee',
+                    paddingBottom: '10px'
                   }}>
-                    <h2 style={{ 
-                      fontSize: '24px', 
-                      color: '#051937', 
+                    <h2 style={{
+                      fontSize: '24px',
+                      color: '#051937',
                       margin: '0',
                       fontWeight: '700'
                     }}>
                       {group.category}
                     </h2>
-                    <span style={{ 
-                      background: '#eef2ff', 
-                      color: '#4776E6', 
-                      padding: '4px 12px', 
-                      borderRadius: '20px', 
-                      fontSize: '13px', 
-                      fontWeight: '600' 
+                    <span style={{
+                      background: '#eef2ff',
+                      color: '#4776E6',
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '13px',
+                      fontWeight: '600'
                     }}>
                       {group.models.length} {group.models.length === 1 ? 'Model' : 'Models'}
                     </span>
                   </div>
-                  
-                  <div className="results-grid" style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
-                    gap: '25px' 
+
+                  <div className="results-grid" style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+                    gap: '25px'
                   }}>
                     {group.models.map((model, mIdx) => (
-                      <Link 
-                        key={mIdx} 
-                        to={`/product/${group.slug}`}
+                      <Link
+                        key={mIdx}
+                        to={`/product/${group.slug}?model=${model.originalIndex}`}
                         className="model-result-card"
                         style={{
                           textDecoration: 'none',
@@ -226,15 +227,25 @@ const Products = () => {
                           transition: 'all 0.3s ease',
                           boxShadow: '0 4px 15px rgba(0,0,0,0.02)'
                         }}
-                        onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)'; }}
-                        onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.02)'; }}
+                        onMouseOver={(e) => { 
+                          e.currentTarget.style.transform = 'translateY(-5px)'; 
+                          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
+                          const title = e.currentTarget.querySelector('h4');
+                          if(title) title.style.color = '#000';
+                        }}
+                        onMouseOut={(e) => { 
+                          e.currentTarget.style.transform = 'translateY(0)'; 
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.02)'; 
+                          const title = e.currentTarget.querySelector('h4');
+                          if(title) title.style.color = '#9b9b9bff';
+                        }}
                       >
-                        <div style={{ 
-                          width: '120px', 
-                          height: '120px', 
-                          flexShrink: 0, 
-                          background: '#f9f9f9', 
-                          borderRadius: '12px', 
+                        <div style={{
+                          width: '120px',
+                          height: '120px',
+                          flexShrink: 0,
+                          background: '#f9f9f9',
+                          borderRadius: '12px',
                           padding: '10px',
                           display: 'flex',
                           alignItems: 'center',
@@ -247,7 +258,7 @@ const Products = () => {
                           )}
                         </div>
                         <div>
-                          <h4 style={{ margin: '0', color: '#333', fontSize: '22px', fontWeight: '500' }}>{model.modelName}</h4>
+                          <h4 style={{ margin: '0', color: '#9b9b9bff', fontSize: '22px', fontWeight: '500' }}>{model.modelName}</h4>
                           {/* Category label removed for cleaner UI */}
                         </div>
                       </Link>
