@@ -19,6 +19,9 @@ scratch/*
 *.jpg
 *.txt
 *.jpeg
+*.json
+
+scraped_data/*
 
 # Editor directories and files
 .vscode/*

@@ -1,15 +1,135 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, ShieldCheck, Zap, Info, Trash2, ChevronDown } from 'lucide-react';
+import { ArrowLeft, MessageSquare, ShieldCheck, Zap, Info, Trash2, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WhatsAppIcon } from './SocialIcons';
 import { client, urlFor } from '../sanity/client';
 
-// Add global styles for animations
+// Add global styles for animations and responsive layout
 const styleSheet = document.createElement("style");
 styleSheet.innerText = `
   @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 800px) {
+    .hero-header {
+      display: none !important;
+    }
+    
+    .sticky-container {
+      position: static !important;
+    }
+    
+    .model-selector-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-top: 30px;
+    }
+    
+    .model-selector-container {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      flex-wrap: nowrap !important;
+      padding-bottom: 10px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      width: 100%;
+    }
+    
+    .model-selector-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .model-btn {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .scroll-arrow {
+      display: flex !important;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+      color: #333;
+    }
+    
+    .scroll-arrow.left { left: -10px; }
+    .scroll-arrow.right { right: -10px; }
+
+    /* Better solution for compare table on mobile */
+    .compare-table thead tr {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: transparent !important;
+    }
+    .compare-table thead th {
+      width: 100% !important;
+      border: none !important;
+      padding: 10px 0 !important;
+    }
+    .compare-table thead th:first-child {
+      display: none; /* Hide 'Technical Feature' text */
+    }
+    
+    .compare-table tbody {
+      display: block;
+      margin-top: 20px;
+    }
+    .compare-table tbody tr {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .compare-table tbody td {
+      width: 100% !important;
+      display: flex;
+      justify-content: space-between;
+      text-align: right !important;
+      padding: 15px !important;
+      border-bottom: 1px solid #f9f9f9 !important;
+      border-right: none !important;
+      box-sizing: border-box;
+      max-width: none !important;
+    }
+    .compare-table tbody td:first-child {
+      justify-content: center;
+      background: #f8f9fa;
+      font-weight: 700 !important;
+      text-align: center !important;
+      color: #051937 !important;
+    }
+    .compare-table tbody td:not(:first-child):before {
+      content: attr(data-model);
+      color: #888;
+      font-weight: 600;
+      text-align: left;
+      margin-right: 15px;
+    }
+  }
+
+  @media (min-width: 801px) {
+    .scroll-arrow {
+      display: none !important;
+    }
   }
 `;
 document.head.appendChild(styleSheet);
@@ -23,6 +143,7 @@ const ProductDetail = () => {
   const [compareId2, setCompareId2] = useState(null);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
+  const scrollContainerRef = React.useRef(null);
 
   const CONTACT_NUMBER = "918169670476";
 
@@ -73,10 +194,22 @@ const ProductDetail = () => {
     product.models?.flatMap(m => m.specs?.map(s => s.label) || [])
   )).filter(Boolean);
 
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -150, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 150, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="product-detail-page" style={{ background: '#fcfdff', minHeight: '100vh' }}>
       {/* Hero Header */}
-      <div style={{
+      <div className="hero-header" style={{
         background: 'linear-gradient(135deg, #051937 0%, #004d7a 100%)',
         padding: '50px 0 60px',
         color: 'white',
@@ -95,7 +228,7 @@ const ProductDetail = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', alignItems: 'start' }}>
 
           {/* Left: Image Showcase */}
-          <div style={{ position: 'sticky', top: '100px' }}>
+          <div className="sticky-container" style={{ position: 'sticky', top: '100px' }}>
             <div style={{
               background: '#fff',
               borderRadius: '24px',
@@ -119,26 +252,39 @@ const ProductDetail = () => {
             </div>
 
             {/* Model Selector Thumbnails */}
-            <div style={{ marginTop: '30px', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-              {product.models?.map((m, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedModelIndex(idx)}
-                  style={{
-                    padding: '12px 20px',
-                    borderRadius: '12px',
-                    border: selectedModelIndex === idx ? '2px solid #007bff' : '2px solid #eee',
-                    background: selectedModelIndex === idx ? '#f0f7ff' : '#fff',
-                    color: selectedModelIndex === idx ? '#007bff' : '#666',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: selectedModelIndex === idx ? '0 5px 15px rgba(0,123,255,0.1)' : 'none'
-                  }}
-                >
-                  {m.modelName}
-                </button>
-              ))}
+            <div className="model-selector-wrapper" style={{ marginTop: '30px' }}>
+              <button className="scroll-arrow left" onClick={scrollLeft} aria-label="Scroll left">
+                <ChevronLeft size={20} />
+              </button>
+              <div
+                className="model-selector-container"
+                ref={scrollContainerRef}
+                style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', padding: '0px 30px' }}
+              >
+                {product.models?.map((m, idx) => (
+                  <button
+                    key={idx}
+                    className="model-btn"
+                    onClick={() => setSelectedModelIndex(idx)}
+                    style={{
+                      padding: '12px 20px',
+                      borderRadius: '12px',
+                      border: selectedModelIndex === idx ? '2px solid #007bff' : '2px solid #eee',
+                      background: selectedModelIndex === idx ? '#f0f7ff' : '#fff',
+                      color: selectedModelIndex === idx ? '#007bff' : '#666',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      boxShadow: selectedModelIndex === idx ? '0 5px 15px rgba(0,123,255,0.1)' : 'none'
+                    }}
+                  >
+                    {m.modelName}
+                  </button>
+                ))}
+              </div>
+              <button className="scroll-arrow right" onClick={scrollRight} aria-label="Scroll right">
+                <ChevronRight size={20} />
+              </button>
             </div>
           </div>
 
@@ -231,7 +377,7 @@ const ProductDetail = () => {
 
             {/* Comparison Selectors (Integrated in Table) */}
             <div style={{ background: '#fff', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)', overflow: 'visible' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table className="compare-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#f8f9fa' }}>
                     <th style={{ padding: '25px 30px', textAlign: 'left', width: '30%', color: '#888', fontWeight: '600', borderBottom: '2px solid #eee' }}>Technical Feature</th>
@@ -375,7 +521,7 @@ const ProductDetail = () => {
                           transition: 'background 0.3s ease'
                         }}>
                           <td style={{ padding: '18px 30px', color: '#666', fontWeight: '600', borderBottom: '1px solid #f0f0f0', fontSize: '15px' }}>{label}</td>
-                          <td style={{
+                          <td data-model={compareId1 !== null ? product.models[compareId1].modelName : "Model 1"} style={{
                             padding: '18px 30px',
                             textAlign: 'center',
                             color: val1 === "—" ? '#ccc' : '#333',
@@ -389,7 +535,7 @@ const ProductDetail = () => {
                           }}>
                             {val1}
                           </td>
-                          <td style={{
+                          <td data-model={compareId2 !== null ? product.models[compareId2].modelName : "Model 2"} style={{
                             padding: '18px 30px',
                             textAlign: 'center',
                             color: val2 === "—" ? '#ccc' : '#333',
