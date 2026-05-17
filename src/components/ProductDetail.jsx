@@ -389,9 +389,9 @@ const ProductDetail = () => {
                       const setOpen = num === 1 ? setShowDropdown1 : setShowDropdown2;
 
                       return (
-                        <th key={num} style={{ padding: '20px', textAlign: 'center', borderBottom: '2px solid #eee', background: '#fff', position: 'relative', width: '35%' }}>
+                        <th key={num} style={{ padding: '20px', textAlign: 'center', borderBottom: '2px solid #eee', background: '#fff', position: 'relative', width: '35%', zIndex: isOpen ? 50 : 1 }}>
                           <div style={{ display: 'flex', gap: '0', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                            <div style={{ position: 'relative', width: '100%', maxWidth: '200px', zIndex: 10 }}>
+                            <div style={{ position: 'relative', width: '100%', maxWidth: '200px', zIndex: isOpen ? 50 : 10 }}>
                               <div
                                 onClick={() => setOpen(!isOpen)}
                                 style={{
