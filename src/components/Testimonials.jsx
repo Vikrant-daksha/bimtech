@@ -8,15 +8,27 @@ const Testimonials = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    client.fetch('*[_type == "testimonial"]')
-      .then(data => {
-        setTestimonials(data);
+    // Only fetch testimonials marked as "featured", max 6
+    client
+      .fetch(
+        `*[_type == "testimonial" && featured == true] | order(_createdAt desc) [0...6] {
+          _id, name, role, content, rating, image, projectName
+        }`
+      )
+      .then((data) => {
+        setTestimonials(data || []);
         setLoading(false);
       })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) return null;
+  // Don't render the section at all if no featured testimonials yet
+  if (testimonials.length === 0) return null;
+
   return (
     <section className="testimonials-section">
       <div className="container">
@@ -25,7 +37,7 @@ const Testimonials = () => {
             <span className="section-subtitle">TESTIMONIALS</span>
             <h2 className="section-title">What Our Clients Say</h2>
           </div>
-          <Link to="/reviews" className="view-all-outline">
+          <Link to="/testimonials" className="view-all-outline">
             View All Reviews <ArrowRight size={18} />
           </Link>
         </div>
@@ -38,14 +50,47 @@ const Testimonials = () => {
               </div>
               <p className="testimonial-text">"{item.content}"</p>
               <div className="stars">
-                {[...Array(item.rating)].map((_, i) => (
+                {[...Array(item.rating || 5)].map((_, i) => (
                   <Star key={i} size={16} fill="#ffc107" color="#ffc107" />
                 ))}
               </div>
+              {item.projectName && (
+                <div
+                  style={{
+                    display: 'inline-block',
+                    background: '#eef2ff',
+                    color: '#003399',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    marginBottom: '12px',
+                  }}
+                >
+                  📁 {item.projectName}
+                </div>
+              )}
               <div className="testimonial-user-flex">
-                <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#f0f5ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '15px', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '50%',
+                    background: '#f0f5ff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '15px',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
                   {item.image ? (
-                    <img src={urlFor(item.image).url()} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img
+                      src={urlFor(item.image).width(100).url()}
+                      alt={item.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                   ) : (
                     <User2 size={24} color="#007bff" />
                   )}

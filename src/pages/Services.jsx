@@ -1,53 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { client, urlFor } from '../sanity/client';
 
-import serviceCctv from '../assets/service-cctv.png';
-import serviceLaptop from '../assets/service-laptop.png';
-import serviceAttendance from '../assets/service-attendance.png';
-import intercomSetup from '../assets/intercom-setup.png';
-import serverNetworking from '../assets/server-networking.png';
-import itSupport from '../assets/it-support.png';
+// Fallback icon map — shown as emoji if no image exists yet
+const ICON_FALLBACKS = {
+  'cctv-installation': '📷',
+  'boom-barrier-system': '🚧',
+  'interactive-panel-solutions': '🖥️',
+  'digital-signage-solutions': '📺',
+  'intercom-system': '📞',
+  'attendance-system': '🖐️',
+  'networking-services': '🌐',
+  'laptop-repair': '💻',
+  'amc-maintenance': '🛡️',
+};
 
 const Services = () => {
-  const servicesList = [
-    {
-      id: 'cctv-installation',
-      title: "CCTV Camera Sales & Installation",
-      image: serviceCctv,
-      items: ["Dome Camera", "Bullet Camera", "IP Camera", "Wireless CCTV"]
-    },
-    {
-      id: 'laptop-repair',
-      title: "Computer & Laptop Service",
-      image: serviceLaptop,
-      items: ["Desktop Repair", "Laptop Repair", "Windows Installation", "Data Backup"]
-    },
-    {
-      id: 'attendance-machine',
-      title: "Attendance Machine Service",
-      image: serviceAttendance,
-      items: ["ESSL Device Setup", "Fingerprint Registration", "Software Support"]
-    },
-    {
-      id: 'intercom-system',
-      title: "Intercom Services",
-      image: intercomSetup,
-      items: ["Building Intercom", "Office Intercom", "Video Door Phone"]
-    },
-    {
-      id: 'networking-services',
-      title: "Networking Services",
-      image: serverNetworking,
-      items: ["Router Setup", "LAN Cabling", "WiFi Installation", "Office Networking"]
-    },
-    {
-      id: 'amc-maintenance',
-      title: "AMC Services",
-      image: itSupport,
-      items: ["CCTV AMC", "Computer AMC", "Monthly Maintenance", "Tech Support"]
-    }
-  ];
+  const [servicesList, setServicesList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client
+      .fetch(
+        `*[_type == "service"] | order(_createdAt asc) {
+          title,
+          "slug": slug.current,
+          image,
+          introduction,
+          whatsIncluded
+        }`
+      )
+      .then((data) => {
+        setServicesList(data || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        Loading services...
+      </div>
+    );
+  }
 
   return (
     <div className="page-content" style={{ padding: '80px 0', minHeight: '60vh', background: '#f8f9fa' }}>
@@ -63,15 +63,44 @@ const Services = () => {
 
         <div className="services-page-grid">
           {servicesList.map((svc, idx) => (
-            <Link to={`/service/${svc.id}`} key={idx} className="service-card-final" style={{ textDecoration: 'none' }}>
-              <img src={svc.image} alt={svc.title} className="card-img" />
+            <Link
+              to={`/service/${svc.slug}`}
+              key={idx}
+              className="service-card-final"
+              style={{ textDecoration: 'none' }}
+            >
+              {/* Image or emoji fallback */}
+              {svc.image ? (
+                <img
+                  src={urlFor(svc.image).width(600).url()}
+                  alt={svc.title}
+                  className="card-img"
+                />
+              ) : (
+                <div
+                  className="card-img"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'linear-gradient(135deg, #e8efff 0%, #f0f4ff 100%)',
+                    fontSize: '64px',
+                  }}
+                >
+                  {ICON_FALLBACKS[svc.slug] || '⚙️'}
+                </div>
+              )}
+
               <div className="card-body">
                 <h3>{svc.title}</h3>
+
+                {/* Show first 3 "What's Included" items as bullet preview */}
                 <ul>
-                  {svc.items.map((item, i) => (
-                    <li key={i}>{item}</li>
+                  {(svc.whatsIncluded || []).slice(0, 3).map((item, i) => (
+                    <li key={i}>{item.title}</li>
                   ))}
                 </ul>
+
                 <div className="btn-see-details">
                   See Details <ArrowRight size={16} />
                 </div>
@@ -79,7 +108,6 @@ const Services = () => {
             </Link>
           ))}
         </div>
-
       </div>
     </div>
   );

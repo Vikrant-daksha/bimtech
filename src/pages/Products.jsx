@@ -38,7 +38,7 @@ const Products = () => {
     products.forEach(product => {
       const categoryMatches = product.title.toLowerCase().includes(term);
       const matchingModels = (product.models || []).map((model, index) => ({ ...model, originalIndex: index }))
-        .filter(model => 
+        .filter(model =>
           model.modelName?.toLowerCase().includes(term) || categoryMatches
         );
 
@@ -73,6 +73,7 @@ const Products = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               width: '100%',
+              boxSizing: 'border-box',
               padding: '18px 25px 18px 55px',
               borderRadius: '50px',
               border: '2px solid #eee',
@@ -227,17 +228,17 @@ const Products = () => {
                           transition: 'all 0.3s ease',
                           boxShadow: '0 4px 15px rgba(0,0,0,0.02)'
                         }}
-                        onMouseOver={(e) => { 
-                          e.currentTarget.style.transform = 'translateY(-5px)'; 
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-5px)';
                           e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
                           const title = e.currentTarget.querySelector('h4');
-                          if(title) title.style.color = '#000';
+                          if (title) title.style.color = '#000';
                         }}
-                        onMouseOut={(e) => { 
-                          e.currentTarget.style.transform = 'translateY(0)'; 
-                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.02)'; 
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.02)';
                           const title = e.currentTarget.querySelector('h4');
-                          if(title) title.style.color = '#9b9b9bff';
+                          if (title) title.style.color = '#9b9b9bff';
                         }}
                       >
                         <div style={{

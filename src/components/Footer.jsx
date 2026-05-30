@@ -46,13 +46,16 @@ const Footer = () => {
           </div>
 
           <div className="footer-col">
-            <h3>Our Main Services</h3>
+            <h3>Our Services</h3>
             <ul>
-              <li><Link to="/service/cctv-installation">CCTV Camera Installation</Link></li>
-              <li><Link to="/service/laptop-repair">Laptop & Desktop Repair</Link></li>
-              <li><Link to="/service/attendance-machine">Attendance Machine</Link></li>
+              <li><Link to="/service/cctv-installation">CCTV Installation</Link></li>
+              <li><Link to="/service/boom-barrier-system">Boom Barrier System</Link></li>
+              <li><Link to="/service/interactive-panel-solutions">Interactive Panels</Link></li>
+              <li><Link to="/service/digital-signage-solutions">Digital Signage</Link></li>
               <li><Link to="/service/intercom-system">Intercom System</Link></li>
+              <li><Link to="/service/attendance-system">Attendance System</Link></li>
               <li><Link to="/service/networking-services">Networking Solutions</Link></li>
+              <li><Link to="/service/laptop-repair">Computer &amp; Laptop Services</Link></li>
               <li><Link to="/service/amc-maintenance">AMC Services</Link></li>
             </ul>
           </div>

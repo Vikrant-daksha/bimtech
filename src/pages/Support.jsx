@@ -17,7 +17,7 @@ const Support = () => {
   return (
     <div className="page-content" style={{ padding: '80px 0', minHeight: '60vh', background: '#f4f7f6' }}>
       <div className="container">
-        
+
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <h1 style={{ color: '#051937', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '800', marginBottom: '15px' }}>Support Services</h1>
           <p style={{ color: '#666', fontSize: '18px', maxWidth: '600px', margin: '0 auto' }}>
@@ -32,16 +32,16 @@ const Support = () => {
               const isActive = selectedRequest === item.name;
               const IconComp = item.icon;
               return (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   onClick={() => setSelectedRequest(item.name)}
-                  style={{ 
-                    background: isActive ? 'linear-gradient(135deg, #0080ff 0%, #004797 100%)' : '#fff', 
-                    padding: '30px', 
-                    borderRadius: '16px', 
-                    boxShadow: isActive ? '0 15px 35px rgba(0, 123, 255, 0.2)' : '0 10px 30px rgba(0,0,0,0.04)', 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                  style={{
+                    background: isActive ? 'linear-gradient(135deg, #0080ff 0%, #004797 100%)' : '#fff',
+                    padding: '30px',
+                    borderRadius: '16px',
+                    boxShadow: isActive ? '0 15px 35px rgba(0, 123, 255, 0.2)' : '0 10px 30px rgba(0,0,0,0.04)',
+                    display: 'flex',
+                    alignItems: 'center',
                     gap: '20px',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
@@ -60,13 +60,13 @@ const Support = () => {
                     }
                   }}
                 >
-                  <div style={{ 
-                    background: isActive ? 'rgba(255,255,255,0.2)' : '#f0f5ff', 
-                    padding: '15px', 
-                    borderRadius: '12px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center' 
+                  <div style={{
+                    background: isActive ? 'rgba(255,255,255,0.2)' : '#f0f5ff',
+                    padding: '15px',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}>
                     <IconComp size={32} color={isActive ? "#fff" : "#007bff"} />
                   </div>
@@ -77,7 +77,7 @@ const Support = () => {
               );
             })}
           </div>
-          
+
           {/* Support Form */}
           <div style={{ background: '#fff', padding: '50px', borderRadius: '20px', boxShadow: '0 15px 40px rgba(0,0,0,0.06)' }}>
             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
@@ -88,15 +88,15 @@ const Support = () => {
             <form style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '25px' }}>
               <div style={{ gridColumn: 'span 1' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: '600' }}>Your Name</label>
-                <input type="text" placeholder="John Doe" style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb' }} />
+                <input type="text" placeholder="your name..." style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb' }} />
               </div>
               <div style={{ gridColumn: 'span 1' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: '600' }}>Phone Number</label>
-                <input type="tel" placeholder="+91 98765 43210" style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb' }} />
+                <input type="tel" placeholder="+91 0000000000" style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb' }} />
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: '600' }}>Request Type</label>
-                <select 
+                <select
                   value={selectedRequest}
                   onChange={(e) => setSelectedRequest(e.target.value)}
                   style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb', color: '#333', cursor: 'pointer', appearance: 'none' }}
@@ -110,21 +110,21 @@ const Support = () => {
                 <textarea placeholder="Please provide details about your problem or request..." rows="5" style={{ padding: '16px', borderRadius: '10px', border: '1px solid #e0e0e0', width: '100%', fontSize: '16px', boxSizing: 'border-box', background: '#f9fafb', resize: 'vertical' }}></textarea>
               </div>
               <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-                <button type="button" style={{ 
-                  padding: '18px 30px', 
-                  background: 'linear-gradient(135deg, #0080ff 0%, #004797 100%)', 
-                  color: '#fff', 
-                  border: 'none', 
-                  borderRadius: '10px', 
-                  fontWeight: 'bold', 
+                <button type="button" style={{
+                  padding: '18px 30px',
+                  background: 'linear-gradient(135deg, #0080ff 0%, #004797 100%)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
                   fontSize: '18px',
                   cursor: 'pointer',
                   width: '100%',
                   boxShadow: '0 6px 15px rgba(0, 123, 255, 0.3)',
                   transition: 'transform 0.2s ease, box-shadow 0.2s ease'
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 123, 255, 0.4)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(0, 123, 255, 0.3)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 123, 255, 0.4)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(0, 123, 255, 0.3)'; }}
                 >
                   Submit Support Ticket
                 </button>

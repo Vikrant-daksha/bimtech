@@ -21,6 +21,7 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Products from './pages/Products';
 import Gallery from './pages/Gallery';
+import ProjectDetail from './pages/ProjectDetail';
 import Testimonials from './pages/Testimonials';
 import Contact from './pages/Contact';
 import AMCPlans from './pages/AMCPlans';
@@ -55,6 +56,7 @@ function App() {
           <Route path="/amc-plans" element={<AMCPlans />} />
           <Route path="/products" element={<Products />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/gallery/:id" element={<ProjectDetail />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/support" element={<Support />} />

@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .env
 
+services_info.md
+
 scripts/*
 scratch/*
 *.png

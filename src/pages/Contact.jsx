@@ -33,7 +33,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page" style={{ background: '#ffffff', color: '#0f172a', minHeight: '100vh', overflow: 'hidden' }}>
-      
+
       {/* --- HERO HEADER --- */}
       <section style={{
         padding: '50px 0 20px',
@@ -182,11 +182,11 @@ const Contact = () => {
               <form style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                 <div style={{ gridColumn: 'span 1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Full Name</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" style={inputStyle} />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="your name..." style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: 'span 1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Phone Number</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 00000 00000" style={inputStyle} />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 0000000000" style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Email Address</label>
@@ -207,7 +207,7 @@ const Contact = () => {
                   <label style={{ display: 'block', marginBottom: '8px', color: '#334155', fontWeight: '600', fontSize: '14px' }}>Your Message</label>
                   <textarea name="message" value={formData.message} onChange={handleChange} placeholder="How can we help you?" rows="4" style={inputStyle}></textarea>
                 </div>
-                
+
                 {/* ACTIONS */}
                 <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
                   <button type="button" onClick={handleWhatsApp} style={{
